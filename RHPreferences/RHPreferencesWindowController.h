@@ -32,66 +32,62 @@
 
 @protocol RHPreferencesViewControllerProtocol;
 
-@interface RHPreferencesWindowController : NSWindowController <NSToolbarDelegate>{
 
-    NSArray *_viewControllers;
-    NSToolbar *_toolbar;
-    NSArray *_toolbarItems;
-    
-    NSViewController<RHPreferencesViewControllerProtocol> *_selectedViewController;
-    NSString *_unloadedWindowTitle;
-    BOOL _windowTitleShouldAutomaticlyUpdateToReflectSelectedViewController;
+@interface RHPreferencesWindowController : NSWindowController <NSToolbarDelegate>
 
-}
+- (id)initWithViewControllers:(NSArray *)controllers;
+- (id)initWithViewControllers:(NSArray *)controllers andTitle:(NSString *)title;
 
-//init
--(id)initWithViewControllers:(NSArray*)controllers;
--(id)initWithViewControllers:(NSArray*)controllers andTitle:(NSString*)title;
 
-//properties
-@property (copy) NSString *windowTitle;
-@property (assign) BOOL windowTitleShouldAutomaticlyUpdateToReflectSelectedViewController; //defaults to YES
+- (NSString *)windowTitle;
+- (void)setWindowTitle:(NSString *)aTitle;
 
-@property (retain) IBOutlet NSToolbar *toolbar;
-@property (retain) IBOutlet NSArray *viewControllers; //controllers should implement RHPreferencesViewControllerProtocol
+@property (readwrite, assign) BOOL windowUsesViewControllerTitle;
+/** @note: Defaults to YES. **/
 
-@property (assign) NSUInteger selectedIndex;
-@property (assign) NSViewController <RHPreferencesViewControllerProtocol> *selectedViewController;
+@property (readwrite, unsafe_unretained) IBOutlet NSToolbar * toolbar;
+@property (readonly, strong) NSArray * viewControllers;
+/** @note: Controllers should implement RHPreferencesViewControllerProtocol. **/
 
--(NSViewController <RHPreferencesViewControllerProtocol>*)viewControllerWithIdentifier:(NSString*)identifier;
+@property (readwrite, assign) NSUInteger selectedIndex;
 
-//you can include these placeholder controllers amongst your array of view controllers to show their respective items in the toolbar
-+(id)separatorPlaceholderController;        // NSToolbarSeparatorItemIdentifier
-+(id)flexibleSpacePlaceholderController;    // NSToolbarFlexibleSpaceItemIdentifier
-+(id)spacePlaceholderController;            // NSToolbarSpaceItemIdentifier
+- (NSViewController<RHPreferencesViewControllerProtocol> *)selectedViewController;
+- (void)setSelectedViewController:(NSViewController<RHPreferencesViewControllerProtocol> *)aViewController;
 
-+(id)showColorsPlaceholderController;       // NSToolbarShowColorsItemIdentifier
-+(id)showFontsPlaceholderController;        // NSToolbarShowFontsItemIdentifier
-+(id)customizeToolbarPlaceholderController; // NSToolbarCustomizeToolbarItemIdentifier
-+(id)printPlaceholderController;            // NSToolbarPrintItemIdentifier
+- (NSViewController<RHPreferencesViewControllerProtocol> *)viewControllerWithIdentifier:(NSString *)identifier;
+
+// You can include these placeholder controllers amongst your array of view controllers to show their respective items in the toolbar:
++ (id)separatorPlaceholderController;        // NSToolbarSeparatorItemIdentifier
++ (id)flexibleSpacePlaceholderController;    // NSToolbarFlexibleSpaceItemIdentifier
++ (id)spacePlaceholderController;            // NSToolbarSpaceItemIdentifier
+
++ (id)showColorsPlaceholderController;       // NSToolbarShowColorsItemIdentifier
++ (id)showFontsPlaceholderController;        // NSToolbarShowFontsItemIdentifier
++ (id)customizeToolbarPlaceholderController; // NSToolbarCustomizeToolbarItemIdentifier
++ (id)printPlaceholderController;            // NSToolbarPrintItemIdentifier
 
 @end
 
 
-
-// Implement this protocol on your view controller so that RHPreferencesWindow knows what to show in the tabbar. Label, image etc.
 @protocol RHPreferencesViewControllerProtocol <NSObject>
+/** Implement this protocol on your view controller so that RHPreferencesWindow knows what to show in the tabbar. Label, image, etc. **/
+
 @required
 
-@property (nonatomic, readonly, retain) NSString *identifier;
-@property (nonatomic, readonly, retain) NSImage *toolbarItemImage;
-@property (nonatomic, readonly, retain) NSString *toolbarItemLabel;
+@property (readonly, copy) NSString * identifier;
+@property (readonly, strong) NSImage * toolbarItemImage;
+@property (readonly, copy) NSString * toolbarItemLabel;
 
 @optional
 
-@property (nonatomic, readonly, retain) NSToolbarItem *toolbarItem; //optional, overrides the above 3 properties. allows for custom tabbar items.
+@property (readonly, strong) NSToolbarItem * toolbarItem; // Optional, overrides the above 3 properties. Allows for custom tab bar items.
 
-//methods called when switching between tabs
--(void)viewWillAppear;
--(void)viewDidAppear;
--(void)viewWillDisappear;
--(void)viewDidDisappear;
+// Methods called when switching between tabs:
+- (void)viewWillAppear;
+- (void)viewDidAppear;
+- (void)viewWillDisappear;
+- (void)viewDidDisappear;
 
--(NSView*)initialKeyView;   // keyboard focus view on tab switch...
+- (NSView *)initialKeyView; // View that will be focused upon switching to this tab.
 
 @end

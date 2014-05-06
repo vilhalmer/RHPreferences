@@ -30,6 +30,8 @@
 		1330B7C4156DF61B00F2E3ED /* RHWideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1330B7C2156DF61B00F2E3ED /* RHWideViewController.m */; };
 		1330B7C5156DF61B00F2E3ED /* RHWideViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1330B7C3156DF61B00F2E3ED /* RHWideViewController.xib */; };
 		1330B7C7156DF9C600F2E3ED /* WidePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1330B7C6156DF9C600F2E3ED /* WidePreferences.png */; };
+		38253762191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h in Headers */ = {isa = PBXBuildFile; fileRef = 38253760191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h */; };
+		38253763191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38253761191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,8 @@
 		1330B7C2156DF61B00F2E3ED /* RHWideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHWideViewController.m; sourceTree = "<group>"; };
 		1330B7C3156DF61B00F2E3ED /* RHWideViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RHWideViewController.xib; sourceTree = "<group>"; };
 		1330B7C6156DF9C600F2E3ED /* WidePreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WidePreferences.png; sourceTree = "<group>"; };
+		38253760191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHPreferencesCustomPlaceholderController.h; sourceTree = "<group>"; };
+		38253761191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHPreferencesCustomPlaceholderController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +160,8 @@
 				1330B77C156DA90C00F2E3ED /* RHPreferences.h */,
 				1330B785156DA9A300F2E3ED /* RHPreferencesWindowController.h */,
 				1330B786156DA9A300F2E3ED /* RHPreferencesWindowController.m */,
+				38253760191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h */,
+				38253761191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m */,
 				1330B784156DA9A300F2E3ED /* RHPreferencesWindow.xib */,
 				1330B776156DA90C00F2E3ED /* Supporting Files */,
 			);
@@ -248,6 +254,7 @@
 			files = (
 				1330B788156DA9A300F2E3ED /* RHPreferencesWindowController.h in Headers */,
 				1330B7AB156DAB6B00F2E3ED /* RHPreferences.h in Headers */,
+				38253762191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1330B789156DA9A300F2E3ED /* RHPreferencesWindowController.m in Sources */,
+				38253763191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +426,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -451,6 +460,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -476,6 +486,7 @@
 		1330B782156DA90C00F2E3ED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -492,6 +503,7 @@
 		1330B783156DA90C00F2E3ED /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
