@@ -41,6 +41,9 @@
 
 - (NSString *)windowTitle;
 - (void)setWindowTitle:(NSString *)aTitle;
+@property (readwrite, copy) NSString * defaultWindowTitle;
+/** The defaultWindowTitle is used in any case where a title couldn't be retrieved from a toolbar item, or if 
+ ** windowUsesViewControllerTitle is set to NO. **/
 
 @property (readwrite, assign) BOOL windowUsesViewControllerTitle;
 /** @note: Defaults to YES. **/

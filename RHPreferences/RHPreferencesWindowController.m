@@ -54,10 +54,9 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 @implementation RHPreferencesWindowController
 {
     NSArray * toolbarItems;
-    NSString * unloadedWindowTitle;
     NSViewController<RHPreferencesViewControllerProtocol> * selectedViewController;
 }
-@synthesize toolbar, selectedIndex, viewControllers, windowUsesViewControllerTitle;
+@synthesize toolbar, selectedIndex, viewControllers, defaultWindowTitle, windowUsesViewControllerTitle;
 
 #pragma mark - Setup
 
@@ -67,30 +66,27 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     
     windowUsesViewControllerTitle = YES;
     [self setViewControllers:someControllers];
-    unloadedWindowTitle = [aTitle copy];
+    defaultWindowTitle = [aTitle copy];
     
     return self;
 }
 
 - (instancetype)initWithViewControllers:(NSArray *)someControllers
 {
-    return [self initWithViewControllers:someControllers andTitle:nil];
+    return [self initWithViewControllers:someControllers andTitle:@"Preferences"];
 }
 
 #pragma mark - Properties
 
 - (NSString *)windowTitle
 {
-    return [self isWindowLoaded] ? [[self window] title] : unloadedWindowTitle;
+    return [self isWindowLoaded] ? [[self window] title] : defaultWindowTitle;
 }
 
 - (void)setWindowTitle:(NSString *)aWindowTitle
 {
     if ([self isWindowLoaded]) {
         [[self window] setTitle:aWindowTitle];
-    }
-    else {
-        unloadedWindowTitle = [aWindowTitle copy];
     }
 }
 
@@ -166,8 +162,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
 
-        // Make sure our "new" view controller is still selected before we add it as a subview, otherwise it's possible we could add more than one to the window (if another tab is selected during resizing).
-        /// @todo: 98% sure this doesn't work because of block scope:
+        // Make sure our "new" view controller is still selected before we add it as a subview, otherwise it's possible we could add more than one to the window (if another tab is selected during resizing):
         if (selectedViewController == aViewController) {
             [[[self window] contentView] addSubview:[aViewController view]];
             
@@ -193,10 +188,17 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     if ([self windowUsesViewControllerTitle]) {
         NSString * identifier = [self toolbarItemIdentifierForViewController:aViewController];
         NSString * title = [[self toolbarItemWithItemIdentifier:identifier] label];
-        /// @todo: Reset to default title if no label is available.
+        
         if (title) {
             [self setWindowTitle:title];
         }
+        else {
+            [self setWindowTitle:defaultWindowTitle];
+        }
+    }
+    else {
+        // Undo any changes that may have been made to the title of the window:
+        [self setWindowTitle:defaultWindowTitle];
     }
 }
 
@@ -396,9 +398,8 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 {
     [super loadWindow];
     
-    if (unloadedWindowTitle) {
-        [[self window] setTitle:unloadedWindowTitle];
-        unloadedWindowTitle = nil;
+    if (defaultWindowTitle) {
+        [[self window] setTitle:defaultWindowTitle];
     }
     
     if (selectedViewController) {
@@ -407,7 +408,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
             [selectedViewController viewWillAppear];
         }
         
-        [self.window.contentView addSubview:[selectedViewController view]];
+        [[[self window] contentView] addSubview:[selectedViewController view]];
         
         if ([selectedViewController respondsToSelector:@selector(viewDidAppear)]) {
             [selectedViewController viewDidAppear];
@@ -423,13 +424,13 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
         // Set the current controllers tab to selected:
         [toolbar setSelectedItemIdentifier:[self toolbarItemIdentifierForViewController:selectedViewController]];
         
-        //if there is a initialKeyView set it as key
+        // If there is a initialKeyView set it as key:
         if ([selectedViewController respondsToSelector:@selector(initialKeyView)]) {
             [[selectedViewController initialKeyView] becomeFirstResponder];
         }
         
         // If we should auto-update the window title, do it now:
-        if (windowUsesViewControllerTitle) {
+        if ([self windowUsesViewControllerTitle]) {
             NSString * identifier = [self toolbarItemIdentifierForViewController:selectedViewController];
             NSString * title = [[self toolbarItemWithItemIdentifier:identifier] label];
             if (title) {
