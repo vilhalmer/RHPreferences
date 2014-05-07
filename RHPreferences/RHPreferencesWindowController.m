@@ -38,14 +38,14 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 
 @interface RHPreferencesWindowController ()
 
-// Toolbar items
-- (NSToolbarItem *)toolbarItemWithItemIdentifier:(NSString *)identifier;
-- (NSToolbarItem *)newToolbarItemForViewController:(NSViewController<RHPreferencesViewControllerProtocol>*)controller;
+// Toolbar items:
+- (NSToolbarItem *)toolbarItemWithItemIdentifier:(NSString *)anIdentifier;
+- (NSToolbarItem *)newToolbarItemForViewController:(NSViewController<RHPreferencesViewControllerProtocol> *)aController;
 - (void)reloadToolbarItems;
-- (IBAction)selectToolbarItem:(NSToolbarItem *)itemToBeSelected;
+- (IBAction)selectToolbarItem:(NSToolbarItem *)anItem;
 - (NSArray *)toolbarItemIdentifiers;
 
-// NSWindowController methods
+// NSWindowController methods:
 - (void)resizeWindowForContentSize:(NSSize)size duration:(CGFloat)duration;
 
 @end
@@ -61,20 +61,20 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 
 #pragma mark - Setup
 
-- (instancetype)initWithViewControllers:(NSArray *)controllers andTitle:(NSString *)title
+- (instancetype)initWithViewControllers:(NSArray *)someControllers andTitle:(NSString *)aTitle
 {
     if (!(self = [super initWithWindowNibName:@"RHPreferencesWindow"])) return nil;
     
     windowUsesViewControllerTitle = YES;
-    [self setViewControllers:controllers];
-    unloadedWindowTitle = [title copy];
+    [self setViewControllers:someControllers];
+    unloadedWindowTitle = [aTitle copy];
     
     return self;
 }
 
-- (instancetype)initWithViewControllers:(NSArray *)controllers
+- (instancetype)initWithViewControllers:(NSArray *)someControllers
 {
-    return [self initWithViewControllers:controllers andTitle:nil];
+    return [self initWithViewControllers:someControllers andTitle:nil];
 }
 
 #pragma mark - Properties
@@ -155,12 +155,12 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     }   
             
     // Resize to preferred window size for given view (duration is determined by difference between current and new sizes):
-    float hDifference = fabs(aViewController.view.bounds.size.height - previousViewController.view.bounds.size.height);
-    float wDifference = fabs(aViewController.view.bounds.size.width - previousViewController.view.bounds.size.width);
+    float hDifference = fabs([[aViewController view] bounds].size.height - [[previousViewController view] bounds].size.height);
+    float wDifference = fabs([[aViewController view] bounds].size.width - [[previousViewController view] bounds].size.width);
     float difference = MAX(hDifference, wDifference);
     float duration = MAX(RHPreferencesWindowControllerResizeAnimationDurationPer100Pixels * (difference / 100), 0.10); // We always want a slight animation.
     
-    [self resizeWindowForContentSize:aViewController.view.bounds.size duration:duration];
+    [self resizeWindowForContentSize:[[aViewController view] bounds].size duration:duration];
 
     double delayInSeconds = duration + 0.02; // +.02 to give time for resize to finish before appearing.
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -323,10 +323,10 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 }
 
 
-- (IBAction)selectToolbarItem:(NSToolbarItem *)itemToBeSelected
+- (IBAction)selectToolbarItem:(NSToolbarItem *)anItem
 {
     if ([selectedViewController commitEditing] && [[NSUserDefaultsController sharedUserDefaultsController] commitEditing]) {
-        NSUInteger index = [toolbarItems indexOfObject:itemToBeSelected];
+        NSUInteger index = [toolbarItems indexOfObject:anItem];
         if (index != NSNotFound) {
             [self setSelectedViewController:[viewControllers objectAtIndex:index]];
         }
@@ -450,7 +450,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     return YES;
 }
 
-- (void)windowWillClose:(NSNotification *)notification {
+- (void)windowWillClose:(NSNotification *)aNotification {
     // Steal firstResponder away from text fields, to commit editing to bindings:
     [[self window] makeFirstResponder:self];
 }
