@@ -33,7 +33,8 @@
 
 
 static NSString * const RHPreferencesWindowControllerSelectedItemIdentifier = @"RHPreferencesWindowControllerSelectedItemIdentifier";
-static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100Pixels = 0.05f;
+//static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100Pixels = 0.05f;
+static const CGFloat RHPreferencesWindowControllerResizeAnimationDuration = 0.2f;
 
 
 @interface RHPreferencesWindowController ()
@@ -46,7 +47,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 - (NSArray *)toolbarItemIdentifiers;
 
 // NSWindowController methods:
-- (void)resizeWindowForContentSize:(NSSize)size duration:(CGFloat)duration;
+- (void)resizeWindowForContentSize:(NSSize)size duration:(CGFloat)duration completionBlock:(void(^)(void))aBlock;
 
 @end
 
@@ -149,19 +150,15 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     if ([aViewController respondsToSelector:@selector(viewWillAppear)]) {
         [(id)aViewController viewWillAppear];
     }   
-            
+    /*
     // Resize to preferred window size for given view (duration is determined by difference between current and new sizes):
     float hDifference = fabs([[aViewController view] bounds].size.height - [[previousViewController view] bounds].size.height);
     float wDifference = fabs([[aViewController view] bounds].size.width - [[previousViewController view] bounds].size.width);
     float difference = MAX(hDifference, wDifference);
     float duration = MAX(RHPreferencesWindowControllerResizeAnimationDurationPer100Pixels * (difference / 100), 0.10); // We always want a slight animation.
-    
-    [self resizeWindowForContentSize:[[aViewController view] bounds].size duration:duration];
-
-    double delayInSeconds = duration + 0.02; // +.02 to give time for resize to finish before appearing.
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-
+    */
+    float duration = RHPreferencesWindowControllerResizeAnimationDuration; // Use a constant duration, it's prettier.
+    [self resizeWindowForContentSize:[[aViewController view] bounds].size duration:duration completionBlock:^(void) {
         // Make sure our "new" view controller is still selected before we add it as a subview, otherwise it's possible we could add more than one to the window (if another tab is selected during resizing):
         if (selectedViewController == aViewController) {
             [[[self window] contentView] addSubview:[aViewController view]];
@@ -169,14 +166,13 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
             if ([aViewController respondsToSelector:@selector(viewDidAppear)]){
                 [(id)aViewController viewDidAppear];
             }
-
+            
             //if there is a initialKeyView set it as key
             if ([aViewController respondsToSelector:@selector(initialKeyView)]){
                 [[aViewController initialKeyView] becomeFirstResponder];
             }
         }
-    });
-    
+    }];
 
     [[aViewController view] setFrameOrigin:NSMakePoint(0, 0)]; // Force our view to a 0,0 origin, fixed in the lower right corner.
     [[aViewController view] setAutoresizingMask:NSViewMaxXMargin|NSViewMaxYMargin];
@@ -231,7 +227,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
 
 #pragma mark - View Controller Methods
 
-- (void)resizeWindowForContentSize:(NSSize)aSize duration:(CGFloat)aDuration
+- (void)resizeWindowForContentSize:(NSSize)aSize duration:(CGFloat)aDuration completionBlock:(void(^)(void))aBlock
 {
     NSWindow * window = [self window];
     
@@ -243,6 +239,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
     if (aDuration > 0.0f) {
         [NSAnimationContext beginGrouping];
         [[NSAnimationContext currentContext] setDuration:aDuration];
+        [[NSAnimationContext currentContext] setCompletionHandler:aBlock];
         
         [[window animator] setFrame:newFrame display:YES];
         
@@ -415,7 +412,7 @@ static const CGFloat RHPreferencesWindowControllerResizeAnimationDurationPer100P
         }        
         
         // Resize to preferred window size for given view:
-        [self resizeWindowForContentSize:[[selectedViewController view] bounds].size duration:0.0f];
+        [self resizeWindowForContentSize:[[selectedViewController view] bounds].size duration:0.0f completionBlock:nil];
         
         [[selectedViewController view] setFrameOrigin:NSMakePoint(0, 0)];
         [[selectedViewController view] setAutoresizingMask:NSViewMaxXMargin|NSViewMaxYMargin];
