@@ -32,6 +32,7 @@
 		1330B7C7156DF9C600F2E3ED /* WidePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1330B7C6156DF9C600F2E3ED /* WidePreferences.png */; };
 		38253762191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h in Headers */ = {isa = PBXBuildFile; fileRef = 38253760191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h */; };
 		38253763191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38253761191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m */; };
+		38327D3C191A8AFF009E9656 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38327D3B191A8AFF009E9656 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		1330B7C6156DF9C600F2E3ED /* WidePreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WidePreferences.png; sourceTree = "<group>"; };
 		38253760191957F600D6E679 /* RHPreferencesCustomPlaceholderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHPreferencesCustomPlaceholderController.h; sourceTree = "<group>"; };
 		38253761191957F600D6E679 /* RHPreferencesCustomPlaceholderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHPreferencesCustomPlaceholderController.m; sourceTree = "<group>"; };
+		38327D3B191A8AFF009E9656 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38327D3C191A8AFF009E9656 /* QuartzCore.framework in Frameworks */,
 				1330B770156DA90C00F2E3ED /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,6 +141,7 @@
 		1330B76E156DA90C00F2E3ED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				38327D3B191A8AFF009E9656 /* QuartzCore.framework */,
 				1330B76F156DA90C00F2E3ED /* Cocoa.framework */,
 				1330B771156DA90C00F2E3ED /* Other Frameworks */,
 			);
